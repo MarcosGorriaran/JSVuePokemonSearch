@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/pokeapi-js-wrapper/dist/index.js"></script>
+    <script src="main.js"></script>
+    <script src="components/ShowPokemonData.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #SearchResult{
+            display: flex;
+            background-color: #ff1c1c;
+            border-radius: 50px;
+            padding: 5px;
+        }
+        #SearchResult img{
+            height: 150px;
+            width: 150px;
+            border-radius: 50px;
+            border-color: black;
+            border-style: solid;
+            background-color: white;
+        }
+        #favList{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        #favList img{
+            border-radius: 25px;
+            border-color: black;
+            border-style: solid;
+            background-color: white;
+            height: 100px;
+            width: 100px;
+        }
+        #searchField{
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div id="test">
+        <div id="favList">
+            <img v-for="(item,index) in Array.from(favList, ([name, value]) => ({ name, value }))" :src="item.value.sprites.front_default" @click="SetActualPokemon(item.value)"/>
+        </div>
+        <div id="searchField">
+            <input type="text" id="PokemonSearcher">
+            <input type="button" @click="SearchPokemon" value="Search">
+        </div>
+        
+        <p v-if="waitingPok">searching</p>
+        <p v-if="error">{{error}}</p>
+
+        <ShowPokemonData v-if="actualPokemon" :name="actualPokemon.name"
+        :order="actualPokemon.order"
+        :weight="actualPokemon.weight"
+        :stats="actualPokemon.stats"
+        :spriteURL="actualPokemon.sprites.front_default",
+        :onList="favList.get(actualPokemon.name)"
+        @addFav="AddFavourite"
+        @removeFav="RemoveFavourite"></ShowPokemonData>
+        <!--template v-if="actualPokemon">
+            <div id="SearchResult">
+                <img :src="actualPokemon.sprites.front_default">
+                <ul>
+                    <li>name: {{actualPokemon.name}}</li>
+                    <li>Pokedex number: {{actualPokemon.order}}</li>
+                    <li>Weight: {{actualPokemon.weight}}</li>
+                    <li>Stats
+                        <ul>
+                            <li v-for="(item,index) in actualPokemon.stats">
+                                {{item.stat.name}}: {{item.base_stat}}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <input type="button" value="Remove Favourite" v-if="favList.get(actualPokemon.name)" @click="RemoveFavourite">
+            <input type="button" value="Add Favourite" v-else @click="AddFavourite">
+        </template-->
+        
+    </div>
+</body>
+</html>
